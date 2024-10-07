@@ -16,11 +16,11 @@ class Minimax:
         
         # Si l'agent actuel est le joueur max, alors l'action à faire est une action max.
         elif cstate.current_agent == 0:
-            return Minimax.max_value(mdp=mdp, cstate=cstate, depth=depth, maxdepth=maxdepth)
+            return Minimax.max_value(mdp=mdp, cstate=cstate, depth=depth+1, maxdepth=maxdepth)
         
         # Si l'agent actuel est le joueur min, alors l'action à faire est une action min.
         elif cstate.current_agent == 1:
-            return Minimax.min_value(mdp=mdp, cstate=cstate, depth=depth, maxdepth=maxdepth)
+            return Minimax.min_value(mdp=mdp, cstate=cstate, depth=depth+1, maxdepth=maxdepth)
         
         else: raise ValueError(f'[E] Unknown procedure for state {cstate}.')
 
@@ -32,7 +32,7 @@ class Minimax:
         # Si elle est plus petite que v, on peut la choisir.
         for action in mdp.available_actions(state=cstate):
             sucessor = mdp.step(state=cstate, action=action)
-            v = max(v, Minimax.value(mdp=mdp, cstate=sucessor, depth=depth+1, maxdepth=maxdepth))
+            v = max(v, Minimax.value(mdp=mdp, cstate=sucessor, depth=depth, maxdepth=maxdepth))
         return v
 
     @staticmethod
@@ -43,24 +43,28 @@ class Minimax:
         # Si elle est plus petite que v, on peut la choisir.
         for action in mdp.available_actions(state=cstate):
             sucessor = mdp.step(state=cstate, action=action)
-            v = min(v, Minimax.value(mdp=mdp, cstate=sucessor, depth=depth+1, maxdepth=maxdepth))
+            v = min(v, Minimax.value(mdp=mdp, cstate=sucessor, depth=depth, maxdepth=maxdepth))
         return v
 
 
 def minimax(mdp: CompetitiveEnv[A, S], state: S, max_depth: int) -> Optional[A]:
     
-    best_move: A = Action.STAY
+    if state.current_agent != 0: raise ValueError(f'[E] Minimax needs current_agent to be the player (=0). (got {state.current_agent})')
+
+    best_move: A = None
     best_val: float = -float('inf')
 
     # On obtient la meilleure action disponible, munie de son meilleur score.
     for a in mdp.available_actions(state=state):
 
         sucessor: S = mdp.step(state=state, action=a)
-        sucessor_eval: float = Minimax.value(mdp=mdp, cstate=sucessor, depth=0, maxdepth=max_depth)
+        sucessor_eval: float = Minimax.value(mdp=mdp, cstate=sucessor, depth=1, maxdepth=max_depth)
         
-        if sucessor_eval > best_val:
+        if sucessor_eval >= best_val:
             best_move = a
             best_val = sucessor_eval
+
+        print(a, sucessor_eval)
 
     return best_move
 
