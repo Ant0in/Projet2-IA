@@ -1,19 +1,13 @@
-from lle import World
-from competitive_world import CompetitiveWorld
-import random
+
+
+from graph_parser import GraphMDP
 from adversarial_search import minimax
+from competitive_env import CompetitiveEnv, State, S, A
+from competitive_world import CompetitiveWorld
 
 
+if __name__ == '__main__':
 
-if __name__ == "__main__":
+    mdp = GraphMDP.parse(r"C:\Users\antoi\Desktop\Projet2-IA\tests\graphs\vary-depth.graph")
     
-    world = CompetitiveWorld(
-        World(
-            """
-        .  L1W
-        S0 S1
-        X  X"""
-        )
-    )
-
-    minimax(mdp=world, state=world.reset().world_state, max_depth=5)
+    print(minimax(mdp=mdp, state=mdp.reset(), max_depth=2))
