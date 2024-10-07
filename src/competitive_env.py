@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 @dataclass
 class State(ABC):
+    
     """
     State in an adversarial MDP.
     It must somehow know whose agent's turn it is.

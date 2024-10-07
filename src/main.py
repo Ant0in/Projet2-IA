@@ -1,17 +1,19 @@
 from lle import World
 from competitive_world import CompetitiveWorld
 import random
+from adversarial_search import minimax
 
-
-def main():
-    """Vous pouvez tester et débugger votre programme ici"""
-    world = CompetitiveWorld(World("S0 X"))
-    state = world.reset()
-    while not world.is_final(state):
-        action = random.choice(world.available_actions(state))
-        state = world.step(state, action)
-    print(state.value)
 
 
 if __name__ == "__main__":
-    main()
+    
+    world = CompetitiveWorld(
+        World(
+            """
+        .  L1W
+        S0 S1
+        X  X"""
+        )
+    )
+
+    minimax(mdp=world, state=world.reset().world_state, max_depth=5)
