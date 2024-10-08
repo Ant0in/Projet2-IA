@@ -1,10 +1,13 @@
 
 from competitive_env import CompetitiveEnv, A, S
+from functools import lru_cache
+
 
 
 class MinimaxUtil:
 
     @staticmethod
+    @lru_cache(maxsize=None)
     def value(mdp: CompetitiveEnv[A, S], cstate: S, depth: int, maxdepth: int) -> float:
         
         # Si état final ou maxdepth reached, alors on return le cstate.
@@ -22,6 +25,7 @@ class MinimaxUtil:
         else: raise ValueError(f'[E] Unknown procedure for state {cstate}.')
 
     @staticmethod
+    @lru_cache(maxsize=None)
     def max_value(mdp: CompetitiveEnv, cstate: S, maxdepth: int, depth: int = 0) -> float:
         
         v: float = -float('inf')
@@ -33,6 +37,7 @@ class MinimaxUtil:
         return v
 
     @staticmethod
+    @lru_cache(maxsize=None)
     def min_value(mdp: CompetitiveEnv, cstate: S, maxdepth: int, depth: int = 0) -> float:
 
         v: float = float('inf')

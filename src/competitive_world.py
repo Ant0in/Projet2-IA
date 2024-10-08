@@ -18,6 +18,10 @@ class CWorldState(State):
 
     def is_alive(self, agent_id: int) -> bool:
         return self.world_state.agents_alive[agent_id]
+    
+    def __hash__(self) -> int:
+        # Je réécris __hash__ pour permettre le cache dans les algos.
+        return hash(self.current_agent) + hash(self.value) + hash(self.world_state)
 
 
 
