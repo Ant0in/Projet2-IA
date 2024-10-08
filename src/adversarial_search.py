@@ -15,6 +15,7 @@ class AlphaBetaPruningUtil:
         
         # Si état final ou maxdepth reached, alors on return le cstate.
         if mdp.is_final(state=cstate) or depth >= maxdepth:
+            print(cstate)
             return cstate.value
         
         # Si l'agent actuel est le joueur max, alors l'action à faire est une action max.
@@ -34,7 +35,7 @@ class AlphaBetaPruningUtil:
 
         for action in mdp.available_actions(state=cstate):
             sucessor = mdp.step(state=cstate, action=action)
-            v = max(v, MinimaxUtil.value(mdp=mdp, cstate=sucessor, depth=depth, maxdepth=maxdepth))
+            v = max(v, AlphaBetaPruningUtil.value(mdp=mdp, cstate=sucessor, depth=depth, maxdepth=maxdepth, alpha=alpha, beta=beta))
             alpha = max(v, alpha)
             if beta <= alpha:
                 break
@@ -47,7 +48,7 @@ class AlphaBetaPruningUtil:
 
         for action in mdp.available_actions(state=cstate):
             sucessor = mdp.step(state=cstate, action=action)
-            v = min(v, MinimaxUtil.value(mdp=mdp, cstate=sucessor, depth=depth, maxdepth=maxdepth))
+            v = min(v, AlphaBetaPruningUtil.value(mdp=mdp, cstate=sucessor, depth=depth, maxdepth=maxdepth, alpha=alpha, beta=beta))
             beta = min(v, beta)
             if beta <= alpha:
                 break
