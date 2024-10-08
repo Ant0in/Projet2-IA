@@ -30,12 +30,14 @@ class AlphaBetaPruningUtil:
 
         v: float = -float('inf')
 
+        # On récupère chaque sucesseur, puis on calcule la valeur de alpha.
+        # Si alpha est + grand que beta, alors on peut prune et éviter de visiter les autres sucesseurs.
         for action in mdp.available_actions(state=cstate):
             sucessor = mdp.step(state=cstate, action=action)
             v = max(v, AlphaBetaPruningUtil.value(mdp=mdp, cstate=sucessor, depth=depth, maxdepth=maxdepth, alpha=alpha, beta=beta))
             alpha = max(v, alpha)
             if beta <= alpha:
-                break
+                break  # prune
         return v
     
     @staticmethod
@@ -44,10 +46,13 @@ class AlphaBetaPruningUtil:
 
         v: float = float('inf')
 
+        # On récupère chaque sucesseur, puis on calcule la valeur de beta.
+        # Si alpha est + grand que beta, alors on peut prune et éviter de visiter les autres sucesseurs.
         for action in mdp.available_actions(state=cstate):
             sucessor = mdp.step(state=cstate, action=action)
             v = min(v, AlphaBetaPruningUtil.value(mdp=mdp, cstate=sucessor, depth=depth, maxdepth=maxdepth, alpha=alpha, beta=beta))
             beta = min(v, beta)
             if beta <= alpha:
-                break
+                break  # prune
         return v
+    

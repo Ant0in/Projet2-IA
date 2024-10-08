@@ -41,8 +41,8 @@ class ExpectimaxUtil:
     def exp_value(mdp: CompetitiveEnv, cstate: S, maxdepth: int, depth: int = 0) -> float:
 
         v: float = 0.0
-        # On définit alpha comme la probabilité d'un sucesseur pour une distribution uniforme.
-        # Pas besoin de vérifier qu'il y'a des sucessors, la vérification est faite dans value.
+        # On définit alpha (1/n) comme la probabilité d'un sucesseur pour une distribution uniforme.
+        # Pas besoin de vérifier qu'il y'a des sucessors (éviter div par 0), la vérification est faite dans value.
         sucessors: list = mdp.available_actions(state=cstate)
         alpha: float = 1 / len(sucessors)
         # On va récupérer l'espérance de chacun des sucesseurs.

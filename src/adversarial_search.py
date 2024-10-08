@@ -10,8 +10,6 @@ from alphabetapruning import AlphaBetaPruningUtil
 
 
 
-
-
 def minimax(mdp: CompetitiveEnv[A, S], state: S, max_depth: int) -> Optional[A]:
     
     if state.current_agent != 0: raise ValueError(f'[E] Minimax needs current_agent to be the player (=0). (got {state.current_agent})')

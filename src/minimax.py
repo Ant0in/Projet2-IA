@@ -47,3 +47,4 @@ class MinimaxUtil:
             sucessor = mdp.step(state=cstate, action=action)
             v = min(v, MinimaxUtil.value(mdp=mdp, cstate=sucessor, depth=depth, maxdepth=maxdepth))
         return v
+

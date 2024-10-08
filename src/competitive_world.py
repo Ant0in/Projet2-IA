@@ -8,8 +8,8 @@ from competitive_env import CompetitiveEnv, State
 @dataclass
 class CWorldState(State):
 
-    # Competitive world state
-    # contains value of current worldstate + agent state (whose turn)
+    # Container d'un worldstate ainsi que l'ID de l'agent devant effectuer 
+    # un coup et de la valeur calculée pour ce state.
     world_state: lle.WorldState
 
     def __init__(self, value: float, current_agent: int, world_state: lle.WorldState) -> None:
@@ -20,18 +20,16 @@ class CWorldState(State):
         return self.world_state.agents_alive[agent_id]
     
     def __hash__(self) -> int:
-        # Je réécris __hash__ pour permettre le cache dans les algos.
+        # Je réécris __hash__ pour permettre le caching dans les algos d'exploration des states.
         return hash(self.current_agent) + hash(self.value) + hash(self.world_state)
 
 
 
 class CompetitiveWorld(CompetitiveEnv[Action, CWorldState]):
 
-    # Competitive world
-
     def __init__(self, world: World) -> None:
         super().__init__()
-        assert world.n_agents == 2, f'[E] World must contain 2 agents. (={world.n_agents})'
+        assert world.n_agents == 2, f'[E] CompetitiveWorld must contain 2 agents. (={world.n_agents})'
         self.world = world
 
     def reset(self) -> CWorldState:
