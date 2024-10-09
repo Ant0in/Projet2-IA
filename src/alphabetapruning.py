@@ -11,7 +11,6 @@ class AlphaBetaPruningUtil:
         
         # Si état final ou maxdepth reached, alors on return le cstate.
         if mdp.is_final(state=cstate) or depth >= maxdepth:
-            print(cstate)
             return cstate.value
         
         # Si l'agent actuel est le joueur max, alors l'action à faire est une action max.
