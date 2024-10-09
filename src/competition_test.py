@@ -1,17 +1,19 @@
 
 
 from adversarial_search import minimax, alpha_beta, expectimax
-from competitive_env import CompetitiveEnv, State, S
 from competitive_world import CompetitiveWorld, CWorldState
-from lle import World, WorldState, Action
+from lle import World, Action
 import random
 import inspect
 import numpy as np
 
 
+
 class Competition:
 
-    def __init__(self, mdp: CompetitiveWorld) -> None:
+    def __init__(self, mdp: CompetitiveWorld, seed: int = None) -> None:
+
+        if seed: random.seed(seed)
         self.mdp: CompetitiveWorld = mdp
         self.current_state: CWorldState = mdp.reset()
         self.turn: int = 0
@@ -90,19 +92,43 @@ class Competition:
             scores.append(r['score'])
 
         res: list = [s for s in (v for v in zip(turns, scores, winners))]
-        self.simulation_output_pretty_print(res)
-        return res
+        return self.compute_statistics(res)
 
     @staticmethod
-    def simulation_output_pretty_print(res: list[tuple]) -> None:
+    def compute_statistics(res: list[tuple]) -> None:
 
         turns, scores, winners = ([t[i] for t in res] for i in range(3))
-        turns_std: float = np.std(turns)
-        turns_avg: float = np.average(turns)
-
+        
+        turns_std: float = float(np.std(turns))
+        turns_avg: float = float(np.average(turns))
+        min_turns: int = min(turns)
+        max_turns: int = max(turns)
+        
         winrate: float = winners.count('Player') / len(winners)
+        looserate: float = winners.count('Opponent') / len(winners)
+        drawrate: float = winners.count(None) / len(winners)
+        
+        scores_std: float = float(np.std(scores))
+        scores_avg: float = float(np.average(scores))
+        min_score: float = min(scores)
+        max_score: float = max(scores)
 
-        print(winrate)
+        stats: dict = {
+            'turns_std': turns_std,
+            'turns_avg': turns_avg,
+            'min_turns': min_turns,
+            'max_turns': max_turns,
+            'winrate': winrate,
+            'looserate': looserate,
+            'drawrate': drawrate,
+            'scores_std': scores_std,
+            'scores_avg': scores_avg,
+            'min_score': min_score,
+            'max_score': max_score
+        }
+
+        return {k: round(v, 2) for k, v in stats.items()}
+
 
 
 if __name__ == '__main__':
@@ -116,4 +142,5 @@ if __name__ == '__main__':
     """
 
     c = Competition(mdp=CompetitiveWorld(World(w)))
-    c.run_simulation(it=30, algorithm=expectimax, maxdepth=5, swap_players=False, verbose=False)
+    c.swap_players()
+    print(c.run_simulation(it=30, algorithm=expectimax, maxdepth=1, swap_players=False, verbose=False))
