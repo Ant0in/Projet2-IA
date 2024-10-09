@@ -30,8 +30,9 @@ class Competition:
 
     def aversarial_search(self, algorithm: callable, max_depth: int) -> Action:
         assert callable(algorithm)  # On vérifie que c'est une fonction
-        assert {'mdp', 'state', 'max_depth'}.issubset(set(inspect.signature(algorithm).parameters.keys()))  # On vérifie les paramètres
-        return algorithm(mdp=self.mdp, state=self.current_state, max_depth=max_depth)
+        #assert {'mdp', 'state', 'max_depth'}.issubset(set(inspect.signature(algorithm).parameters.keys()))  # On vérifie les paramètres
+        #return algorithm(mdp=self.mdp, state=self.current_state, max_depth=max_depth)
+        return algorithm()
 
     def get_random_move(self) -> Action:
         possible: list[Action] = self.mdp.available_actions(state=self.current_state)
@@ -193,7 +194,7 @@ if __name__ == '__main__':
     G S1 . G G X    
     """
 
-    weird: str = \
+    bigmaze: str = \
     """
     S0 . G G . G . . . @ @ 
     G  @ @ . . . . . . . . 
@@ -207,6 +208,6 @@ if __name__ == '__main__':
     S1 . . . . . . . . . .
     """
 
-    c = Competition(mdp=CompetitiveWorld(World(avantage_w)))
-    r = c.run_simulation(it=20, algorithm=minimax, maxdepth=5, swap_players=False, verbose=False)
+    c = Competition(mdp=CompetitiveWorld(World(fiftyfifty)))
+    r = c.run_simulation(it=20, algorithm=c.get_random_move, maxdepth=0, swap_players=False, verbose=False)
     c.plot(r)
