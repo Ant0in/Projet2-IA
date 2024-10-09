@@ -30,9 +30,8 @@ class Competition:
 
     def aversarial_search(self, algorithm: callable, max_depth: int) -> Action:
         assert callable(algorithm)  # On vérifie que c'est une fonction
-        #assert {'mdp', 'state', 'max_depth'}.issubset(set(inspect.signature(algorithm).parameters.keys()))  # On vérifie les paramètres
-        #return algorithm(mdp=self.mdp, state=self.current_state, max_depth=max_depth)
-        return algorithm()
+        assert {'mdp', 'state', 'max_depth'}.issubset(set(inspect.signature(algorithm).parameters.keys()))  # On vérifie les paramètres
+        return algorithm(mdp=self.mdp, state=self.current_state, max_depth=max_depth)
 
     def get_random_move(self) -> Action:
         possible: list[Action] = self.mdp.available_actions(state=self.current_state)
@@ -209,5 +208,5 @@ if __name__ == '__main__':
     """
 
     c = Competition(mdp=CompetitiveWorld(World(fiftyfifty)))
-    r = c.run_simulation(it=20, algorithm=c.get_random_move, maxdepth=0, swap_players=False, verbose=False)
+    r = c.run_simulation(it=20, algorithm=alpha_beta, maxdepth=5, swap_players=False, verbose=False)
     c.plot(r)
