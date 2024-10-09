@@ -6,6 +6,7 @@ from lle import World, Action
 import random
 import inspect
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 
@@ -46,7 +47,6 @@ class Competition:
         
         str_world: str = self.mdp.world.world_string
         swapped: str = str_world.replace('S0', 'temp').replace('S1', 'S0').replace('temp', 'S1')
-        print(swapped)
         self.mdp = CompetitiveWorld(World(swapped))
         self.set_cstate(self.mdp.reset())
 
@@ -92,10 +92,10 @@ class Competition:
             scores.append(r['score'])
 
         res: list = [s for s in (v for v in zip(turns, scores, winners))]
-        return self.compute_statistics(res)
+        return self.compute_statistics(res=res, algorithm=algorithm, maxdepth=maxdepth, it=it)
 
     @staticmethod
-    def compute_statistics(res: list[tuple]) -> None:
+    def compute_statistics(res: list[tuple], algorithm: callable, maxdepth: int, it: int) -> None:
 
         turns, scores, winners = ([t[i] for t in res] for i in range(3))
         
@@ -124,23 +124,89 @@ class Competition:
             'scores_std': scores_std,
             'scores_avg': scores_avg,
             'min_score': min_score,
-            'max_score': max_score
+            'max_score': max_score,
+            'algorithm': algorithm.__name__,
+            'max_depth': maxdepth,
+            'iterations': it
         }
 
-        return {k: round(v, 2) for k, v in stats.items()}
+        return {k: round(v, 2) if isinstance(v, float) or isinstance(v, int) else v for k, v in stats.items()}
+
+    @staticmethod
+    def plot(data: dict) -> None:
+
+        fig, axs = plt.subplots(1, 3, figsize=(16, 5))
+
+        rates = [data['winrate'], data['looserate'], data['drawrate']]
+        labels = ['Winrate', 'Looserate', 'Drawrate']
+        colors = ['#4CAF50', '#F44336', '#2196F3']
+        axs[0].bar(labels, rates, color=colors)
+        axs[0].set_title('Rates (Win/Loss/Draw)')
+        axs[0].set_ylim(0, 1)
+
+        turns_data = [data['min_turns'], data['turns_avg'], data['max_turns']]
+        axs[1].boxplot(turns_data, patch_artist=True, boxprops=dict(facecolor='#FFC107'))
+        axs[1].set_title('Turns Statistics')
+        axs[1].set_xticks([1], labels=['Turns'])
+        axs[1].scatter(1, data['turns_avg'], color='red', zorder=3, label='Average')
+        axs[1].legend(loc='upper left')
+        axs[1].set_title(f'Turns Statistics\nMin: {data["min_turns"]}, Avg: {data["turns_avg"]}, Max: {data["max_turns"]}')
+
+        scores_data = [data['min_score'], data['scores_avg'], data['max_score']]
+        axs[2].boxplot(scores_data, patch_artist=True, boxprops=dict(facecolor='#03A9F4'))
+        axs[2].set_title('Scores Statistics')
+        axs[2].set_xticks([1], labels=['Scores'])
+        axs[2].scatter(1, data['scores_avg'], color='purple', zorder=3, label='Average Score')
+        axs[2].scatter(1, data['min_score'], color='blue', label='Min Score')
+        axs[2].scatter(1, data['max_score'], color='green', label='Max Score')
+        axs[2].legend(loc='upper left')
+        axs[2].set_title(f'Scores Statistics\nMin: {data["min_score"]}, Avg: {data["scores_avg"]}, Max: {data["max_score"]}')
+
+        plt.suptitle(f"Algorithm: {data['algorithm']} | Max Depth: {data['max_depth']} | Iterations: {data['iterations']}", fontsize=16, fontweight='bold')  
+        plt.subplots_adjust(top=0.80, wspace=0.1)
+        #plt.savefig(f"../{data['algorithm']}depth{data['max_depth']}.png")
+        plt.show()
+
 
 
 
 if __name__ == '__main__':
 
-    w: str = \
+    avantage_w: str = \
     """
-    S0 . G G
-    G  @ @ @
-    .  . X X
-    S1 . . .
+    
+    S0 G G G G G G
+    G  G @ @ @ G G
+    G  @ . . . G G
+    G  G G G G X G
+    .  . . @ . . .
+    S1 @ @ @ . . X
+
     """
 
-    c = Competition(mdp=CompetitiveWorld(World(w)))
-    c.swap_players()
-    print(c.run_simulation(it=30, algorithm=expectimax, maxdepth=1, swap_players=False, verbose=False))
+    fiftyfifty: str = \
+    """
+    G  G . @ G G
+    S0 @ . @ . G
+    G  . G X . G
+    @  . @ @ @ G
+    G S1 . G G X    
+    """
+
+    weird: str = \
+    """
+    S0 . G G . G . . . @ @ 
+    G  @ @ . . . . . . . . 
+    .  . . @ @ @ @ . G G G 
+    @  @ G . . . . . . . @ 
+    .  . . @ @ @ @ @ @ . . 
+    .  G G . . . . . . G . 
+    @  @ . @ @ @ @ @ @ @ . 
+    .  . . . . . . . . . X 
+    G  G @ @ @ @ @ @ @ @ X 
+    S1 . . . . . . . . . .
+    """
+
+    c = Competition(mdp=CompetitiveWorld(World(avantage_w)))
+    r = c.run_simulation(it=20, algorithm=minimax, maxdepth=5, swap_players=False, verbose=False)
+    c.plot(r)
