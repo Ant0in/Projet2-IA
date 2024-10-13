@@ -135,16 +135,16 @@ class Competition:
     @staticmethod
     def plot(data: dict) -> None:
 
-        fig, axs = plt.subplots(1, 3, figsize=(16, 5))
+        _, axs = plt.subplots(1, 3, figsize=(16, 5))
 
-        rates = [data['winrate'], data['looserate'], data['drawrate']]
-        labels = ['Winrate', 'Looserate', 'Drawrate']
-        colors = ['#4CAF50', '#F44336', '#2196F3']
+        rates: list[float | int] = [data['winrate'], data['looserate'], data['drawrate']]
+        labels: list[str] = ['Winrate', 'Looserate', 'Drawrate']
+        colors: list[str] = ['#4CAF50', '#F44336', '#2196F3']
         axs[0].bar(labels, rates, color=colors)
         axs[0].set_title('Rates (Win/Loss/Draw)')
         axs[0].set_ylim(0, 1)
 
-        turns_data = [data['min_turns'], data['turns_avg'], data['max_turns']]
+        turns_data: list[float | int] = [data['min_turns'], data['turns_avg'], data['max_turns']]
         axs[1].boxplot(turns_data, patch_artist=True, boxprops=dict(facecolor='#FFC107'))
         axs[1].set_title('Turns Statistics')
         axs[1].set_xticks([1], labels=['Turns'])
@@ -152,7 +152,7 @@ class Competition:
         axs[1].legend(loc='upper left')
         axs[1].set_title(f'Turns Statistics\nMin: {data["min_turns"]}, Avg: {data["turns_avg"]}, Max: {data["max_turns"]}')
 
-        scores_data = [data['min_score'], data['scores_avg'], data['max_score']]
+        scores_data: list[float | int] = [data['min_score'], data['scores_avg'], data['max_score']]
         axs[2].boxplot(scores_data, patch_artist=True, boxprops=dict(facecolor='#03A9F4'))
         axs[2].set_title('Scores Statistics')
         axs[2].set_xticks([1], labels=['Scores'])
@@ -174,7 +174,6 @@ if __name__ == '__main__':
 
     avantage_w: str = \
     """
-    
     S0 G G G G G G
     G  G @ @ @ G G
     G  @ . . . G G
@@ -208,5 +207,5 @@ if __name__ == '__main__':
     """
 
     c = Competition(mdp=CompetitiveWorld(World(fiftyfifty)))
-    r = c.run_simulation(it=20, algorithm=alpha_beta, maxdepth=5, swap_players=False, verbose=False)
+    r = c.run_simulation(it=50, algorithm=alpha_beta, maxdepth=5, swap_players=False, verbose=False)
     c.plot(r)
