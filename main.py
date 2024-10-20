@@ -1,9 +1,32 @@
 
+import argparse
+from src import expectimax, minimax, alpha_beta, Competition, CompetitiveWorld
+from lle import World
 
-from src import *
 
+ALGORITHMS: dict = {
+    'minimax': minimax,
+    'alphabeta': alpha_beta,
+    'expectimax': expectimax
+}
+
+def main():
+
+    parser = argparse.ArgumentParser(description='Play an agent in a world using different algorithms.')
+    parser.add_argument('world_file', type=str, help='Path to the text file containing the world representation.')
+    parser.add_argument('--algo', required=True, choices=ALGORITHMS.keys(), help='Algorithm to use (minimax, alphabeta, expectimax).')
+    parser.add_argument('--maxdepth', type=int, default=5, help='Maximum depth for the algorithm (default: 5).')
+    
+
+    args = parser.parse_args()
+
+    with open(args.world_file, 'r') as f:
+        str_world = f.read()
+
+    world: World = World(str_world)
+    c: Competition = Competition(mdp=CompetitiveWorld(world))
+    c.run_match(algorithm=ALGORITHMS[args.algo], maxdepth=args.maxdepth, swap_players=False, verbose=True)
 
 
 if __name__ == '__main__':
-
-    ...
+    main()

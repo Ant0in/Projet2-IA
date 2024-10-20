@@ -1,5 +1,5 @@
 from lle import World, Action
-from competitive_world import CompetitiveWorld
+from src.competitive_world import CompetitiveWorld
 
 
 def test_state_turn():

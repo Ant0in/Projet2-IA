@@ -1,6 +1,6 @@
 from lle import World, Action
-from adversarial_search import minimax
-from competitive_world import CompetitiveWorld
+from src.adversarial_search import minimax
+from src.competitive_world import CompetitiveWorld
 from .competitive_graph import GraphMDP
 
 
