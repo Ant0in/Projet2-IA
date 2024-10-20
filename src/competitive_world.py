@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import lle
 from lle import World, Action, WorldEvent, EventType
-from competitive_env import CompetitiveEnv, State
+from .competitive_env import CompetitiveEnv, State
 
 
 

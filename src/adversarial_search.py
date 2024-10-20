@@ -1,11 +1,11 @@
 
 
 from typing import Optional
-from competitive_env import CompetitiveEnv, S, A
+from .competitive_env import CompetitiveEnv, S, A
 
-from minimax import MinimaxUtil
-from expectimax import ExpectimaxUtil
-from alphabetapruning import AlphaBetaPruningUtil
+from .minimax import MinimaxUtil
+from .expectimax import ExpectimaxUtil
+from .alphabetapruning import AlphaBetaPruningUtil
 
 
 

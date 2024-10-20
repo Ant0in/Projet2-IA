@@ -1,7 +1,7 @@
 
 
-from adversarial_search import minimax, alpha_beta, expectimax
-from competitive_world import CompetitiveWorld, CWorldState
+from .adversarial_search import minimax, alpha_beta, expectimax
+from .competitive_world import CompetitiveWorld, CWorldState
 from lle import World, Action
 import random
 import inspect

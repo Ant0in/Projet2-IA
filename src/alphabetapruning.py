@@ -1,4 +1,4 @@
-from competitive_env import CompetitiveEnv, A, S
+from .competitive_env import CompetitiveEnv, A, S
 from functools import lru_cache
 
 
