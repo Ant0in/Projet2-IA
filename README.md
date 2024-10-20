@@ -43,7 +43,7 @@ Make sure you have `Python >= 3.12` installed.
 4. Run the project on a grid `map1.txt`:
 
    ```bash
-   python "./main.py" "./tests/map1.txt" --algo "expectimax"
+   python ".\main.py" ".\tests\map1.txt" --algo "minimax" --maxdepth 5
    ```
 
 ### Running Tests

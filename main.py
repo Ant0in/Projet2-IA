@@ -15,9 +15,8 @@ def main():
     parser = argparse.ArgumentParser(description='Play an agent in a world using different algorithms.')
     parser.add_argument('world_file', type=str, help='Path to the text file containing the world representation.')
     parser.add_argument('--algo', required=True, choices=ALGORITHMS.keys(), help='Algorithm to use (minimax, alphabeta, expectimax).')
-    parser.add_argument('--maxdepth', type=int, default=5, help='Maximum depth for the algorithm (default: 5).')
+    parser.add_argument('--maxdepth', required=True, type=int, help='Maximum search depth for adversarial search.')
     
-
     args = parser.parse_args()
 
     with open(args.world_file, 'r') as f:
